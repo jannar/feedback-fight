@@ -18,12 +18,16 @@ public class ScorerScript : MonoBehaviour {
 	public GameObject gameManager;
 	public HealthManagerScript hms;
 
+	// FOR WRITING/SAVING VALUES
+	public FileIOScript fs;
+
 	// Use this for initialization
 	void Start () {
 
 		gameManager = GameObject.Find("GameManager");
 		hms = gameManager.GetComponent<HealthManagerScript> ();
 		pms = gameObject.GetComponent<PlayerMovementScript> ();
+		fs = gameManager.GetComponent<FileIOScript> ();
 
 	}
 	
@@ -37,23 +41,26 @@ public class ScorerScript : MonoBehaviour {
 		if (this.pms.speed > MAX_SPEED) {
 			this.pms.speed = MAX_SPEED;
 		}
-
-		//if (gameObject.name.Contains(2) )
-		
 	}
 
-	// I was going to try to fix this so that only one could do damage at a time,
-	// but I actually find it kind of compelling that both do damage. Still, that would
-	// change the win condition somewhat, so there has to be a way for both players to
-	// put health back, rather than just one.
-	void OnCollisionEnter2D(Collision2D other) {
+	void FixedUpdate(){
 
-		if (other.gameObject.name.Contains("Player1")) {
-			Damager (player2, player2Damage);
-		} else if (other.gameObject.name.Contains("Player2")) {
-			Damager (player1, player1Damage);
+		if (pms.player2Move && Input.GetKey (KeyCode.RightShift)) {
+			healthReturn (player1, player1Damage);
+			Debug.Log ("health added: " + hms.BoxHealth);
 		}
 
+	}
+
+	void OnCollisionEnter2D(Collision2D other) {
+
+		if (other.gameObject.name.Contains ("Player1") && pms.player2Move) {
+			Damager (player2, player2Damage);
+		}
+
+		if (other.gameObject.name.Contains("Player2") && pms.player1Move) {
+			Damager (player1, player1Damage);
+		}
 	}
 
 	public void Damager(GameObject go, int damage){
@@ -63,16 +70,22 @@ public class ScorerScript : MonoBehaviour {
 		if (go == player1) {
 			damage++;
 			pms.speed--;
+			fs.damageKeeper1.Add (damage);
 			Debug.Log ("Damaging " + damage);
 
 		} else if (go == player2) {
 			damage--;
 			pms.speed++;
+			fs.damageKeeper2.Add (damage);
 			Debug.Log ("Damaging " + damage);
 		}
 
 		if (damage > 0) {
 			damage = 0;
 		}
+	}
+
+	public void healthReturn(GameObject go, int plusHealth){
+		hms.BoxHealth = hms.BoxHealth + (plusHealth - 2);
 	}
 }
