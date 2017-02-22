@@ -11,7 +11,10 @@ public class ScoreManagerScript : MonoBehaviour {
 	public HealthManagerScript hms;
 
 	// FOR WRITING/SAVING VALUES
-	public FileIOScript fs;
+	public List<int> fs1;
+	public List<int> fs2;
+	public List<int> w1;
+	public List<int> w2;
 
 	// FOR COUNTING VALUES
 	public int total1;
@@ -24,7 +27,10 @@ public class ScoreManagerScript : MonoBehaviour {
 	void Start () {
 
 		hms = gameObject.GetComponent<HealthManagerScript> ();
-		fs = GameObject.Find("GameManager").GetComponent<FileIOScript> ();
+		fs1 = GameObject.Find("GameManager").GetComponent<FileIOScript> ().damageKeeper1;
+		fs2 = GameObject.Find ("GameManager").GetComponent<FileIOScript> ().damageKeeper2;
+		w1 = GameObject.Find ("GameManager").GetComponent<FileIOScript>().timesWon1;
+		w2 = GameObject.Find ("GameManager").GetComponent<FileIOScript>().timesWon2;
 		winnerText = GameObject.Find ("Winner").GetComponent<Text> ();
 
 		winnerText.text = " ";
@@ -38,21 +44,21 @@ public class ScoreManagerScript : MonoBehaviour {
 		if (hms.BoxHealth == 0) {
 
 			// total the lists
-			total1 = fs.damageKeeper1.Count;
-			total2 = fs.damageKeeper2.Count;
+			total1 = fs1.Count;
+			total2 = fs2.Count;
 //			ListTotaler (fs.damageKeeper1, total1);
 //			ListTotaler (fs.damageKeeper2, total2);
 
 			// compare the values and add the wins
 			if (total1 > total2) {
-				fs.timesWon1.Add(1);
+				w1.Add(1);
 				winnerText.text = "Player 1 wins this round";
 			} else if (total2 > total1) {
-				fs.timesWon2.Add(1);
+				w2.Add(1);
 				winnerText.text = "Player 2 wins this round";
 			} else if (total1 == total2) {
-				fs.timesWon1.Add(1);
-				fs.timesWon2.Add(1);
+				w1.Add (1);
+				w2.Add (2);
 				winnerText.text = "It's a draw yo you both win this time";
 			}
 
