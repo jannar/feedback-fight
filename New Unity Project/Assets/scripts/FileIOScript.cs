@@ -8,17 +8,18 @@ public class FileIOScript : MonoBehaviour {
 	// I FEEL LIKE THIS IS ALL TOTALLY UNNECESSARY AND I'M BEING INEFFICIENT AND WRONG
 	// SORRY MATT
 
+	// KEEPING TRACK OF DAMAGE
+	public string damageFileName = "damageKeeper.txt";
+
+	public List <int> damageKeeper1;
+	public List <int> damageKeeper2;
+
 	// KEEPING TRACK OF SCORES
 	public string scoreFileName = "scoreKeeper.txt";
 
 	public List <int> timesWon1;
 	public List <int> timesWon2;
 
-	// KEEPING TRACK OF DAMAGE
-	public string damageFileName = "damageKeeper.txt";
-
-	public List <int> damageKeeper1;
-	public List <int> damageKeeper2;
 
 	// Use this for initialization
 	void Start () {
