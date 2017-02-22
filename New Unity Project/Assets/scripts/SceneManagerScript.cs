@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class SceneManagerScript : MonoBehaviour {
 
 	public Button startText;
-//	public Button instructionsText;
+	public Button instructionsText;
 //	public Button resetText;
 
 	public static SceneManagerScript instance;
@@ -15,15 +15,15 @@ public class SceneManagerScript : MonoBehaviour {
 	// Use this for initialization
 	public void Start () {
 
-		if (instance == null) {
-			instance = this;
-			DontDestroyOnLoad (this);
-		} else {
-			Destroy (gameObject);
-		}
+//		if (instance == null) {
+//			instance = this;
+//			DontDestroyOnLoad (this);
+//		} else {
+//			Destroy (gameObject);
+//		}
 
 		startText = startText.GetComponent<Button> ();
-//		instructionsText = instructionsText.GetComponent<Button> ();
+		instructionsText = instructionsText.GetComponent<Button> ();
 //		resetText = resetText.GetComponent<Button> ();
 		
 	}
@@ -38,8 +38,8 @@ public class SceneManagerScript : MonoBehaviour {
 	public void StartLevel(){
 		SceneManager.LoadScene (1);
 	}
-//
-//	public void ShowInstructions(){
-//		SceneManager.LoadScene (0);
-//	}
+
+	public void ShowInstructions(){
+		SceneManager.LoadScene (0);
+	}
 }
