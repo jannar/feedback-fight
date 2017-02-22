@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ScorerScript : MonoBehaviour {
 
@@ -21,6 +22,9 @@ public class ScorerScript : MonoBehaviour {
 	// FOR WRITING/SAVING VALUES
 	public FileIOScript fs;
 
+	// TEXT MESH
+	public Text healthText;
+
 	// Use this for initialization
 	void Start () {
 
@@ -28,6 +32,10 @@ public class ScorerScript : MonoBehaviour {
 		hms = gameManager.GetComponent<HealthManagerScript> ();
 		pms = gameObject.GetComponent<PlayerMovementScript> ();
 		fs = gameManager.GetComponent<FileIOScript> ();
+		healthText = GameObject.Find ("Health").GetComponent<Text> ();
+
+		healthText.text = "Health Remaining: " + hms.BoxHealth;
+		healthTextColorChanger ();
 
 	}
 	
@@ -41,6 +49,8 @@ public class ScorerScript : MonoBehaviour {
 		if (this.pms.speed > MAX_SPEED) {
 			this.pms.speed = MAX_SPEED;
 		}
+
+		healthTextColorChanger ();
 	}
 
 	void FixedUpdate(){
@@ -49,6 +59,8 @@ public class ScorerScript : MonoBehaviour {
 			healthReturn (player1, player1Damage);
 			Debug.Log ("health added: " + hms.BoxHealth);
 		}
+
+		healthText.text = "Health Remaining: " + hms.BoxHealth;
 
 	}
 
@@ -61,6 +73,8 @@ public class ScorerScript : MonoBehaviour {
 		if (other.gameObject.name.Contains("Player2") && pms.player1Move) {
 			Damager (player1, player1Damage);
 		}
+
+		healthText.text = "Health Remaining: " + hms.BoxHealth;
 	}
 
 	public void Damager(GameObject go, int damage){
@@ -87,5 +101,19 @@ public class ScorerScript : MonoBehaviour {
 
 	public void healthReturn(GameObject go, int plusHealth){
 		hms.BoxHealth = hms.BoxHealth + (plusHealth - 2);
+	}
+
+	public void healthTextColorChanger(){
+		if (hms.BoxHealth >= 30) {
+			healthText.color = Color.green;
+		}
+
+		if (hms.BoxHealth < 30 && hms.BoxHealth > 10) {
+			healthText.color = Color.yellow;
+		}
+
+		if (hms.BoxHealth < 10) {
+			healthText.color = Color.red;
+		}
 	}
 }
