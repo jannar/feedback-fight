@@ -90,16 +90,6 @@ public class HealthManagerScript : MonoBehaviour {
 
 		Debug.Log ("boxHealth: " + boxHealth);
 		Debug.Log ("streakValue: " + streakValue);
-
-//		// HERE, WE NEED TO KEEP TRACK OF SCORES
-//		// AS WELL AS KEEP TRACK OF WHO HAS TAKEN AWAY MORE HEALTH
-//		// WHOEVER HAS TAKEN AWAY MORE HEALTH IS WINNER
-//		// RELOAD LEVEL
-//		// IF THEY HAVE WON MORE THAN THE STREAK NUMBER, YAY, ALSO KEEP GOING
-//		// IF NOT, KEEP PLAYING
-//		if (boxHealth >= BOX_HEALTH_MIN) {
-//			if 
-//		}
 		
 	}
 }
