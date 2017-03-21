@@ -34,7 +34,7 @@ public class FileIOScript : MonoBehaviour {
 		StreamWriter swDmg1 = new StreamWriter(finalFilePathDamage, false);
 
 		for (int i = 0; i < damageKeeper1.Count; i++){
-			swDmg1.WriteLine (damageKeeper1[i]);
+			swDmg1.WriteLine ("damage 1: " + damageKeeper1[i]);
 		}
 
 		swDmg1.Close ();
@@ -43,7 +43,7 @@ public class FileIOScript : MonoBehaviour {
 		StreamWriter swDmg2 = new StreamWriter (finalFilePathDamage, false);
 
 		for (int i = 0; i < damageKeeper2.Count; i++) {
-			swDmg2.WriteLine (damageKeeper2[i]);
+			swDmg2.WriteLine ("damage 2: " + damageKeeper2[i]);
 		}
 
 		swDmg2.Close ();
@@ -52,7 +52,7 @@ public class FileIOScript : MonoBehaviour {
 		StreamWriter winner1 = new StreamWriter (finalFilePathScore, false);
 
 		for (int i = 0; i < timesWon1.Count; i++) {
-			winner1.WriteLine (timesWon1[i]);
+			winner1.WriteLine ("1 won: " + timesWon1[i]);
 		}
 
 		winner1.Close ();
@@ -61,14 +61,36 @@ public class FileIOScript : MonoBehaviour {
 		StreamWriter winner2 = new StreamWriter (finalFilePathScore, false);
 
 		for (int i = 0; i < timesWon2.Count; i++) {
-			winner2.WriteLine (timesWon2[i]);
+			winner2.WriteLine ("2 won: " + timesWon2[i]);
 		}
 
 		winner2.Close ();
 
 		// READ FROM A FILE
-		//StreamReader srDmg1 = new StreamReader (finalFilePathDamage);
-		// how to do this for damage
+		StreamReader srDmg = new StreamReader (finalFilePathDamage);
+		while (!srDmg.EndOfStream) {
+
+			string line = srDmg.ReadLine ();
+
+			string[] splitLine = line.Split (':');
+
+			string players = splitLine [0];
+			string values = splitLine [1];
+
+			if (players.Contains ("damage 1")) {
+				damageKeeper1.Add(values[0]);
+			} else if (players.Contains("damage 2")){
+				damageKeeper2.Add (values[1]);
+			}
+		}
+
+		// add win state here
+
+//		if (timesWon1 || timesWon2 >= 3) {
+//			
+//		}
+
+		srDmg.Close ();
 
 	}
 	
@@ -77,6 +99,6 @@ public class FileIOScript : MonoBehaviour {
 
 		Debug.Log ("Damage 1: " + damageKeeper1.Count);
 		Debug.Log ("Damage 2: " + damageKeeper2.Count);
-		
+
 	}
 }
