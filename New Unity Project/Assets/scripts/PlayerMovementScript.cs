@@ -48,9 +48,6 @@ public class PlayerMovementScript : MonoBehaviour {
 		Move (Vector3.down, downKey);
 		Move (Vector3.left, leftKey);
 		Move (Vector3.right, rightKey);
-
-		player1Move = false;
-		player2Move = false;
 		
 	}
 
@@ -82,6 +79,8 @@ public class PlayerMovementScript : MonoBehaviour {
 			if (Input.GetKey (key)) {
 				transform.Translate (dir * (speed + p1Mod) * Time.deltaTime);
 				player1Move = true;
+			} else {
+				player1Move = false;
 			}
 		}
 
@@ -90,6 +89,8 @@ public class PlayerMovementScript : MonoBehaviour {
 			if (Input.GetKey (key)) {
 				transform.Translate (dir * (speed + p2Mod) * Time.deltaTime);
 				player2Move = true;
+			} else {
+				player2Move = false;
 			}
 		}
 	}

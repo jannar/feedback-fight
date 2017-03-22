@@ -19,8 +19,8 @@ public class SceneManagerScript : MonoBehaviour {
 
 	// FOR LOADING NEW LEVELS
 	// offsets
-	public float offsetX = 0;
-	public float offsetY = 0;
+	public float offsetX = -10;
+	public float offsetY = -4;
 
 	// array for text levels
 	// note: i really wanted to generate these procedurally
@@ -29,11 +29,33 @@ public class SceneManagerScript : MonoBehaviour {
 	public string[] fileNames;
 	public static int levelNum = 0;
 
+	public Text text;
+
+	public Scene currentScene;
+	public Scene inactiveScene1;
+	public Scene inactiveScene2;
+	public string sceneName;
+	public string inactive1;
+	public string inactive2;
+
 	// Use this for initialization
 	public void Start () {
 
-		startText = startText.GetComponent<Button> ();
-		instructionsText = instructionsText.GetComponent<Button> ();
+		currentScene = SceneManager.GetActiveScene ();
+
+		sceneName = currentScene.name;
+
+		inactiveScene1 = SceneManager.GetSceneByName ("p1-winning");
+		inactive1 = inactiveScene1.name;
+		inactiveScene2 = SceneManager.GetSceneByName ("p2-winning");
+		inactive2 = inactiveScene2.name;
+
+		if (sceneName == "instructions") {
+			startText = startText.GetComponent<Button> ();
+			instructionsText = instructionsText.GetComponent<Button> ();
+		}
+
+		LevelLoader (inactiveScene1, inactiveScene2);
 		
 	}
 
@@ -47,69 +69,81 @@ public class SceneManagerScript : MonoBehaviour {
 
 	public void P1InCharge(){
 		SceneManager.LoadScene (3);
-		LevelLoader ();
+		//LevelLoader ();
 	}
 
 	public void P2InCharge(){
 		SceneManager.LoadScene (4);
-		LevelLoader ();
+		//LevelLoader ();
 	}
 
-	public void LevelLoader(){
-		// strings for places and things for the streamreader
-		string fileName = fileNames [levelNum];
-		string filePath = Application.dataPath + "/" + fileName;
+	public void LevelLoader(Scene scene1, Scene scene2){
+		//currentScene = SceneManager.GetActiveScene ();
 
-		// streamreader to read levels from files
-		StreamReader sr = new StreamReader (filePath);
+		//sceneName = currentScene.name;
 
-		// gameobject to hold all them gatdang levels
-		GameObject levelHolder = new GameObject ("Level Holder");
+		if (inactive1 == "p1-winning" || inactive2 == "p2-winning") {
+			Font style = Resources.Load <Font> ("Nunito-Regular");
 
-		// keep track of where the fuck we are
-		int yPos = 0;
+			// strings for places and things for the streamreader
+			//string filename = fileNames [levelNum];
+			string filename = ("level1.txt");
+			string filePath = (Path.Combine (Application.dataPath, filename));
 
-		// instantiate players from prefabs
-		GameObject player1 = Instantiate (Resources.Load("prefabs/Player 1") as GameObject);
-		GameObject player2 = Instantiate (Resources.Load("prefabs/Player 2") as GameObject);
+			// streamreader to read levels from files
+			StreamReader sr = new StreamReader (filePath);
 
-		while (!sr.EndOfStream) {
-			string line = sr.ReadLine ();
+			// keep track of where the fuck we are
+			int yPos = 0;
 
-			for (int xPos = 0; xPos < line.Length; xPos++) {
-				if (line [xPos] == 'x') {
-					GameObject cube = Instantiate (Resources.Load("prefabs/Cube") as GameObject);
-					cube.transform.parent = levelHolder.transform;
+			// instantiate players from prefabs
+			GameObject player1 = Instantiate (Resources.Load ("prefabs/Player1") as GameObject);
+			GameObject player2 = Instantiate (Resources.Load ("prefabs/Player2") as GameObject);
 
-					cube.transform.position = new Vector3 (xPos + offsetX, yPos + offsetY, 0);
+			while (!sr.EndOfStream) {
+				string line = sr.ReadLine ();
 
-					float scaleX = cube.transform.localScale.x;
-					float scaleY = cube.transform.localScale.y;
+				for (int xPos = 0; xPos < line.Length; xPos++) {
+					float randomX = Random.Range (0.5f, 2f);
+					float randomY = Random.Range (1f, 3f);
 
-					float randomX = Random.Range (0f, 4f);
-					float randomY = Random.Range (0f, 4f);
+					if (line [xPos] == 'X') {
+						GameObject cube = Instantiate (Resources.Load ("prefabs/Cube") as GameObject);
 
-					// give it a random shape and size
-					scaleX = randomX;
-					scaleY = randomY;
+						cube.transform.localScale = new Vector3 (randomX, randomY, 0);
+
+						cube.transform.position = new Vector3 (xPos + offsetX, yPos + offsetY, 0);
+						Debug.Log ("cube moved");
+					}
+
+					if (line [xPos] == '1') {
+						player1.transform.position = new Vector3 (xPos + offsetX, yPos + offsetY, 0);
+					}
+
+					if (line [xPos] == '2') {
+						player1.transform.position = new Vector3 (xPos + offsetX, yPos + offsetY, 0);
+					}
 				}
 
-				if (line[xPos] == '1'){
-					player1.transform.position = new Vector3 (xPos + offsetX, yPos + offsetY, 0);
-				}
-
-				if (line [xPos] == '2') {
-					player1.transform.position = new Vector3 (xPos + offsetX, yPos + offsetY, 0);
-				}
+				yPos--;
 			}
 
-			yPos--;
+			sr.Close ();
+
+			levelNum++;
+
+			Canvas canvas = FindObjectOfType<Canvas> ();
+
+			text = canvas.gameObject.AddComponent<Text> ();
+			text.transform.parent = canvas.transform;
+			text.font = style;
+			text.fontSize = 25;
+			text.alignment = TextAnchor.MiddleCenter;
+			text.text = "CRAZY RANDOM BLOCK MODE Y'ALL";
+
+			if (Input.anyKey) {
+				Destroy (text);
+			}
 		}
-
-		sr.Close ();
-
-		levelNum++;
-		
 	}
-
 }

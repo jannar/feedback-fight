@@ -70,12 +70,14 @@ public class ScorerScript : MonoBehaviour {
 
 	void OnCollisionEnter2D(Collision2D other) {
 
-		if (other.gameObject.name.Contains ("Player1")) {
+		if (other.gameObject.name.Contains ("Player1") && pms.player2Move) {
 			Damager (player2, player2Damage);
+			scoreManager.damageKeeper1.Add (player2Damage);
 		}
 
-		if (other.gameObject.name.Contains("Player2")) {
+		if (other.gameObject.name.Contains("Player2") && pms.player1Move) {
 			Damager (player1, player1Damage);
+			scoreManager.damageKeeper2.Add (player1Damage);
 		}
 
 		healthText.text = "Health Remaining: " + hms.BoxHealth;
@@ -85,18 +87,18 @@ public class ScorerScript : MonoBehaviour {
 
 		hms.BoxHealth = hms.BoxHealth - damage;
 
-		if (go == player1 && pms.player1Move) {
-			scoreManager.damageKeeper1.Add (damage);
+		if (go == player1) {
+//			scoreManager.damageKeeper1.Add (damage);
 			damage++;
 			pms.speed--;
-			Debug.Log ("Damaging " + damage);
+			Debug.Log ("Damage done 1: " + damage);
 			damageDone = true;
 
-		} else if (go == player2 && pms.player2Move) {
-			scoreManager.damageKeeper2.Add (damage);
+		} else if (go == player2) {
+//			scoreManager.damageKeeper2.Add (damage);
 			damage--;
 			pms.speed = pms.speed + 0.5f;
-			Debug.Log ("Damaging " + damage);
+			Debug.Log ("Damage done 2: " + damage);
 			damageDone = true;
 		}
 

@@ -67,18 +67,8 @@ public class HealthManagerScript : MonoBehaviour {
 		}
 	}
 
-	public static HealthManagerScript instance;
-
 	// Use this for initialization
 	void Start () {
-
-		// don't destroy on load
-		if (instance == null) {
-			instance = this;
-			DontDestroyOnLoad (this);
-		} else {
-			Destroy (gameObject);
-		}
 
 		// keep the health the max score
 		BoxHealth = BOX_HEALTH_MAX;
