@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class ScorerScript : MonoBehaviour {
 
@@ -18,9 +17,8 @@ public class ScorerScript : MonoBehaviour {
 	// FIND THE HEALTH STUFF
 	public GameObject gameManager;
 	public HealthManagerScript hms;
+	public ScoreManagerScript scoreManager;
 
-	// FOR WRITING/SAVING VALUES
-	public FileIOScript fs;
 	public bool damageDone;
 
 	// TEXT MESH
@@ -30,9 +28,9 @@ public class ScorerScript : MonoBehaviour {
 	void Start () {
 
 		gameManager = GameObject.Find("GameManager");
+		scoreManager = gameManager.GetComponent<ScoreManagerScript> ();
 		hms = gameManager.GetComponent<HealthManagerScript> ();
 		pms = gameObject.GetComponent<PlayerMovementScript> ();
-		fs = gameManager.GetComponent<FileIOScript> ();
 		healthText = GameObject.Find ("Health").GetComponent<Text> ();
 
 		healthText.text = "Health Remaining: " + hms.BoxHealth;
@@ -54,14 +52,15 @@ public class ScorerScript : MonoBehaviour {
 		healthTextColorChanger ();
 
 		if (hms.BoxHealth == 0) {
-			SceneManager.LoadScene (1);
+			this.pms.speed = MIN_SPEED;
+			scoreManager.FindTheWinner();
 		}
 	}
 
 	void FixedUpdate(){
 
 		if (pms.player2Move && Input.GetKey (KeyCode.RightShift)) {
-			healthReturn (player1, player1Damage);
+			healthReturn (player1Damage);
 			Debug.Log ("health added: " + hms.BoxHealth);
 		}
 
@@ -71,11 +70,11 @@ public class ScorerScript : MonoBehaviour {
 
 	void OnCollisionEnter2D(Collision2D other) {
 
-		if (other.gameObject.name.Contains ("Player1") && pms.player2Move) {
+		if (other.gameObject.name.Contains ("Player1")) {
 			Damager (player2, player2Damage);
 		}
 
-		if (other.gameObject.name.Contains("Player2") && pms.player1Move) {
+		if (other.gameObject.name.Contains("Player2")) {
 			Damager (player1, player1Damage);
 		}
 
@@ -86,29 +85,29 @@ public class ScorerScript : MonoBehaviour {
 
 		hms.BoxHealth = hms.BoxHealth - damage;
 
-		if (go == player1) {
+		if (go == player1 && pms.player1Move) {
+			scoreManager.damageKeeper1.Add (damage);
 			damage++;
 			pms.speed--;
-			fs.damageKeeper1.Add (damage);
 			Debug.Log ("Damaging " + damage);
 			damageDone = true;
 
-		} else if (go == player2) {
+		} else if (go == player2 && pms.player2Move) {
+			scoreManager.damageKeeper2.Add (damage);
 			damage--;
-			pms.speed++;
-			fs.damageKeeper2.Add (damage);
+			pms.speed = pms.speed + 0.5f;
 			Debug.Log ("Damaging " + damage);
 			damageDone = true;
 		}
 
 		damageDone = false;
 
-		if (damage > 0) {
-			damage = 0;
+		if (damage > 1) {
+			damage = 1;
 		}
 	}
 
-	public void healthReturn(GameObject go, int plusHealth){
+	public void healthReturn(int plusHealth){
 		hms.BoxHealth = hms.BoxHealth + (plusHealth - 2);
 	}
 
