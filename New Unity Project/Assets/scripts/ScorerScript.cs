@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class ScorerScript : MonoBehaviour {
 
@@ -9,8 +10,7 @@ public class ScorerScript : MonoBehaviour {
 	public GameObject player1, player2;
 
 	// VARIABLES FOR DAMAGE AND SPEED
-	public int player1Damage;
-	public int player2Damage;
+	public int player1Damage, player2Damage;
 	public PlayerMovementScript pms;
 	private const int MIN_SPEED = 1;
 	private const int MAX_SPEED = 50;
@@ -21,6 +21,7 @@ public class ScorerScript : MonoBehaviour {
 
 	// FOR WRITING/SAVING VALUES
 	public FileIOScript fs;
+	public bool damageDone;
 
 	// TEXT MESH
 	public Text healthText;
@@ -51,6 +52,10 @@ public class ScorerScript : MonoBehaviour {
 		}
 
 		healthTextColorChanger ();
+
+		if (hms.BoxHealth == 0) {
+			SceneManager.LoadScene (1);
+		}
 	}
 
 	void FixedUpdate(){
@@ -86,13 +91,17 @@ public class ScorerScript : MonoBehaviour {
 			pms.speed--;
 			fs.damageKeeper1.Add (damage);
 			Debug.Log ("Damaging " + damage);
+			damageDone = true;
 
 		} else if (go == player2) {
 			damage--;
 			pms.speed++;
 			fs.damageKeeper2.Add (damage);
 			Debug.Log ("Damaging " + damage);
+			damageDone = true;
 		}
+
+		damageDone = false;
 
 		if (damage > 0) {
 			damage = 0;

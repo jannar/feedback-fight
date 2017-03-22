@@ -15,13 +15,6 @@ public class SceneManagerScript : MonoBehaviour {
 	// Use this for initialization
 	public void Start () {
 
-//		if (instance == null) {
-//			instance = this;
-//			DontDestroyOnLoad (this);
-//		} else {
-//			Destroy (gameObject);
-//		}
-
 		startText = startText.GetComponent<Button> ();
 		instructionsText = instructionsText.GetComponent<Button> ();
 //		resetText = resetText.GetComponent<Button> ();

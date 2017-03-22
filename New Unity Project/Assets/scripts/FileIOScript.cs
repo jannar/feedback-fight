@@ -8,6 +8,10 @@ public class FileIOScript : MonoBehaviour {
 	// I FEEL LIKE THIS IS ALL TOTALLY UNNECESSARY AND I'M BEING INEFFICIENT AND WRONG
 	// SORRY MATT
 
+	// SCRIPTS
+	public ScorerScript scorer;
+	public HealthManagerScript healthManager;
+
 	// KEEPING TRACK OF DAMAGE
 	public string damageFileName = "damageKeeper.txt";
 
@@ -16,6 +20,8 @@ public class FileIOScript : MonoBehaviour {
 
 	// KEEPING TRACK OF SCORES
 	public string scoreFileName = "scoreKeeper.txt";
+	string finalFilePathDamage;
+	string finalFilePathScore;
 
 	public List <int> timesWon1;
 	public List <int> timesWon2;
@@ -24,29 +30,14 @@ public class FileIOScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
+		scorer = GameObject.Find ("Player1").GetComponent<ScorerScript> ();
+		healthManager = gameObject.GetComponent<HealthManagerScript> ();
+
 		// finding where the computer stores the thing
 		Debug.Log ("Path: " + Application.dataPath);
 
-		string finalFilePathDamage = Application.dataPath + "/" + damageFileName;
-		string finalFilePathScore = Application.dataPath + "/" + scoreFileName;
-
-		// writing the damage info to a file
-		StreamWriter swDmg1 = new StreamWriter(finalFilePathDamage, false);
-
-		for (int i = 0; i < damageKeeper1.Count; i++){
-			swDmg1.WriteLine ("damage 1: " + damageKeeper1[i]);
-		}
-
-		swDmg1.Close ();
-
-		// damage writer for 2
-		StreamWriter swDmg2 = new StreamWriter (finalFilePathDamage, false);
-
-		for (int i = 0; i < damageKeeper2.Count; i++) {
-			swDmg2.WriteLine ("damage 2: " + damageKeeper2[i]);
-		}
-
-		swDmg2.Close ();
+		finalFilePathDamage = Application.dataPath + "/" + damageFileName;
+		finalFilePathScore = Application.dataPath + "/" + scoreFileName;
 
 		// score tracker for 1
 		StreamWriter winner1 = new StreamWriter (finalFilePathScore, false);
@@ -84,12 +75,6 @@ public class FileIOScript : MonoBehaviour {
 			}
 		}
 
-		// add win state here
-
-//		if (timesWon1 || timesWon2 >= 3) {
-//			
-//		}
-
 		srDmg.Close ();
 
 	}
@@ -100,5 +85,24 @@ public class FileIOScript : MonoBehaviour {
 		Debug.Log ("Damage 1: " + damageKeeper1.Count);
 		Debug.Log ("Damage 2: " + damageKeeper2.Count);
 
+		if (scorer.damageDone == true) {
+			// writing the damage info to a file
+			StreamWriter swDmg1 = new StreamWriter(finalFilePathDamage, false);
+
+			for (int i = 0; i < damageKeeper1.Count; i++){
+				swDmg1.WriteLine ("damage 1: " + damageKeeper1[i]);
+			}
+
+			swDmg1.Close ();
+
+			// damage writer for 2
+			StreamWriter swDmg2 = new StreamWriter (finalFilePathDamage, false);
+
+			for (int i = 0; i < damageKeeper2.Count; i++) {
+				swDmg2.WriteLine ("damage 2: " + damageKeeper2[i]);
+			}
+
+			swDmg2.Close ();
+		}
 	}
 }

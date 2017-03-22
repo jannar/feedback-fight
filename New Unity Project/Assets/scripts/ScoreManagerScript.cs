@@ -44,10 +44,10 @@ public class ScoreManagerScript : MonoBehaviour {
 		if (hms.BoxHealth == 0) {
 
 			// total the lists
-			total1 = fs1.Count;
-			total2 = fs2.Count;
-//			ListTotaler (fs.damageKeeper1, total1);
-//			ListTotaler (fs.damageKeeper2, total2);
+			//total1 = fs1.Count;
+			//total2 = fs2.Count;
+			ListTotaler (fs1, total1);
+			ListTotaler (fs2, total2);
 
 			// compare the values and add the wins
 			if (total1 > total2) {
